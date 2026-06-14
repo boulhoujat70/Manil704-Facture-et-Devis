@@ -1,26 +1,25 @@
 {
-  "id": "/Manil704-Facture-et-Devis/",
+  "name": "DevisFact",
   "short_name": "DevisFact",
-  "name": "Devis & Factures France",
   "description": "Génération locale et impression de devis et factures conformes aux mentions françaises.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#6b2cff",
+  "lang": "fr-FR",
   "icons": [
     {
-      "src": "/Manil704-Facture-et-Devis/icon-192.png",
-      "type": "image/png",
+      "src": "icon-192.png",
       "sizes": "192x192",
-      "purpose": "any"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
-      "src": "/Manil704-Facture-et-Devis/icon-512.png",
-      "type": "image/png",
+      "src": "icon-512.png",
       "sizes": "512x512",
-      "purpose": "any"
+      "type": "image/png",
+      "purpose": "any maskable"
     }
-  ],
-  "start_url": "/Manil704-Facture-et-Devis/index.html",
-  "background_color": "#f3f5f8",
-  "theme_color": "#2563eb",
-  "display": "standalone",
-  "orientation": "portrait-primary",
-  "categories": ["business", "productivity"]
+  ]
 }
