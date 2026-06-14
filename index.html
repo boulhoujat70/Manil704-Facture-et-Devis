@@ -5,6 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Devis & Factures France - GitHub</title>
 
+  <!-- Liaison PWA & Configuration Mobile -->
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#2563eb" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
   <style>
     :root {
       --bg: #f3f5f8;
@@ -90,6 +96,7 @@
       font-size: 13px;
       cursor: pointer;
       font-weight: bold;
+      transition: all 0.2s ease;
     }
 
     .tab-btn.active {
@@ -140,16 +147,39 @@
       gap: 10px;
     }
 
-    .notice {
-      border-left: 4px solid var(--warning);
-      background: #fff7ed;
-      color: #7c2d12;
-      padding: 11px;
-      border-radius: 10px;
-      font-size: 13px;
-      line-height: 1.4;
-      margin-bottom: 14px;
+    /* Grille et styles des boutons d'action */
+    .actions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 20px;
+      border-top: 1px solid var(--border);
+      padding-top: 15px;
     }
+
+    .actions-grid button {
+      width: 100%;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 13px;
+      background: var(--primary);
+      color: #fff;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .actions-grid button:hover { filter: brightness(0.95); }
+    .actions-grid button:active { transform: scale(0.98); }
+
+    .actions-grid button.secondary {
+      background: #eef2f7;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    .actions-grid button.success { background: var(--success); grid-column: span 2; font-size: 14px; padding: 14px; }
+    .actions-grid button.danger { background: var(--danger); grid-column: span 2; }
 
     .buttons {
       display: flex;
@@ -158,7 +188,7 @@
       margin-top: 12px;
     }
 
-    button {
+    .buttons button {
       border: none;
       border-radius: 10px;
       padding: 10px 12px;
@@ -167,17 +197,7 @@
       background: var(--primary);
       color: #fff;
     }
-
-    button:hover { filter: brightness(0.96); }
-
-    button.secondary {
-      background: #eef2f7;
-      color: var(--text);
-      border: 1px solid var(--border);
-    }
-
-    button.success { background: var(--success); }
-    button.danger { background: var(--danger); }
+    .buttons button.secondary { background: #eef2f7; color: var(--text); border: 1px solid var(--border); }
 
     .small {
       color: var(--muted);
@@ -417,11 +437,7 @@
       </div>
 
       <div class="panel-body">
-        <div class="notice">
-          Cette application est un modèle pour t'aider. Elle ne remplace pas un expert-comptable, un logiciel certifié, ni une plateforme agréée pour la facturation électronique.
-          Pour GitHub : ne mets pas tes vraies données directement dans le code public.
-        </div>
-
+        <!-- TAB: DOCUMENT -->
         <div id="tab-document" class="tab active">
           <div class="grid-2">
             <div class="field">
@@ -482,6 +498,7 @@
           </div>
         </div>
 
+        <!-- TAB: ENTREPRISE -->
         <div id="tab-entreprise" class="tab">
           <div class="field">
             <label>Nom / Raison sociale</label>
@@ -543,6 +560,7 @@
           </div>
         </div>
 
+        <!-- TAB: CLIENT -->
         <div id="tab-client" class="tab">
           <div class="grid-2">
             <div class="field">
@@ -590,13 +608,14 @@
           </div>
         </div>
 
+        <!-- TAB: LIGNES -->
         <div id="tab-lignes" class="tab">
           <div id="lines"></div>
 
           <div class="buttons">
             <button onclick="addLine()">+ Ajouter une ligne</button>
             <button class="secondary" onclick="addService()">+ Service</button>
-            <button class="secondary" onclick="addProduct()">+ Product</button>
+            <button class="secondary" onclick="addProduct()">+ Produit</button>
           </div>
 
           <p class="small" style="margin-top: 10px;">
@@ -604,6 +623,7 @@
           </p>
         </div>
 
+        <!-- TAB: MENTIONS -->
         <div id="tab-mentions" class="tab">
           <div class="grid-2">
             <div class="field">
@@ -660,19 +680,21 @@
           <div id="checklist"></div>
         </div>
 
-        <div class="buttons no-print" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 15px;">
+        <!-- ACTIONS STYLE GRILLE HARMONIEUSE -->
+        <div class="actions-grid no-print">
           <button class="success" onclick="printPDF()">Imprimer / PDF</button>
           <button onclick="saveData()">Sauvegarder</button>
           <button class="secondary" onclick="loadData()">Recharger</button>
           <button class="secondary" onclick="convertToInvoice()">Devis → Facture</button>
           <button class="secondary" onclick="exportJSON()">Exporter JSON</button>
           <button class="secondary" onclick="document.getElementById('importFile').click()">Importer JSON</button>
-          <button class="danger" onclick="resetApp()">Effacer</button>
+          <button class="danger" onclick="resetApp()">Effacer les données</button>
           <input type="file" id="importFile" accept=".json,application/json" style="display:none">
         </div>
       </div>
     </section>
 
+    <!-- APERCU DU DOCUMENT -->
     <section class="panel preview-wrapper">
       <div class="panel-title">Aperçu document A4</div>
       <div class="panel-body" style="overflow:auto;">
@@ -1176,7 +1198,6 @@
       }
     }
 
-    // Gestion active des onglets
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -1186,7 +1207,6 @@
       });
     });
 
-    // Écoute des changements sur tous les champs pour rafraîchir l'aperçu globale
     function bindEvents() {
       fields.forEach(id => {
         const el = document.getElementById(id);
@@ -1197,7 +1217,6 @@
       });
     }
 
-    // Chargement initial
     const saved = localStorage.getItem('devisFacturesFrance');
     if (saved) {
       try {
@@ -1210,6 +1229,15 @@
     }
 
     bindEvents();
+
+    // Enregistrement Automatique du Service Worker PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => console.log('Service Worker PWA Actif !'))
+          .catch((err) => console.error('Erreur d\'activation PWA:', err));
+      });
+    }
   </script>
 </body>
 </html>
