@@ -1,4 +1,5 @@
 {
+  "id": "/Manil704-Facture-et-Devis/",
   "short_name": "DevisFact",
   "name": "Devis & Factures France",
   "description": "Génération locale et impression de devis et factures conformes aux mentions françaises.",
@@ -6,12 +7,14 @@
     {
       "src": "icon-192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any"
     },
     {
       "src": "icon-512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any"
     }
   ],
   "start_url": "./index.html",
