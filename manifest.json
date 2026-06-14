@@ -5,21 +5,22 @@
   "description": "Génération locale et impression de devis et factures conformes aux mentions françaises.",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "/Manil704-Facture-et-Devis/icon-192.png",
       "type": "image/png",
       "sizes": "192x192",
       "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "/Manil704-Facture-et-Devis/icon-512.png",
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "any"
     }
   ],
-  "start_url": "./index.html",
+  "start_url": "/Manil704-Facture-et-Devis/index.html",
   "background_color": "#f3f5f8",
   "theme_color": "#2563eb",
   "display": "standalone",
-  "orientation": "portrait-primary"
+  "orientation": "portrait-primary",
+  "categories": ["business", "productivity"]
 }
