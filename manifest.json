@@ -1,22 +1,24 @@
 {
+  "id": "./",
   "name": "DevisFact",
   "short_name": "DevisFact",
   "description": "Génération locale et impression de devis et factures conformes aux mentions françaises.",
-  "start_url": "./",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#6b2cff",
+  "theme_color": "#2563eb",
   "lang": "fr-FR",
+  "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "icon-192.png",
+      "src": "./icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "icon-512.png",
+      "src": "./icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
