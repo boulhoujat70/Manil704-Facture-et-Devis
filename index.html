@@ -598,7 +598,7 @@
           <div class="grid-2">
             <div class="field">
               <label>Régime de TVA</label>
-              <select id="vatRegime">
+              <select id="vatRegime" onchange="render()">
                 <option value="normal">TVA applicable</option>
                 <option value="franchise">Franchise en base de TVA</option>
                 <option value="autoliquidation">Autoliquidation</option>
@@ -607,7 +607,7 @@
 
             <div class="field">
               <label>TVA sur les débits</label>
-              <select id="vatDebit">
+              <select id="vatDebit" onchange="render()">
                 <option value="non">Non</option>
                 <option value="oui">Oui, option pour le paiement de la taxe d’après les débits</option>
               </select>
@@ -1164,13 +1164,13 @@
       });
     });
 
+    // Correction de l'écouteur dynamique global
     fields.forEach(id => {
-      document.addEventListener('input', e => {
-        if (e.target && e.target.id === id) render();
-      });
-      document.addEventListener('change', e => {
-        if (e.target && e.target.id === id) render();
-      });
+      const el = document.getElementById(id);
+      if (el) {
+        el.addEventListener('input', render);
+        el.addEventListener('change', render);
+      }
     });
 
     const saved = localStorage.getItem('devisFacturesFrance');
@@ -1184,12 +1184,12 @@
       init();
     }
 
-    // Script d'activation officiel PWA adapté pour GitHub Pages
+    // Liaison d'écouteur Service Worker
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
         navigator.serviceWorker.register('sw.js')
-          .then((reg) => console.log('Service Worker enregistré avec succès !'))
-          .catch((err) => console.error('Échec de l\'enregistrement du Service Worker:', err));
+          .then((reg) => console.log('PWA active.'))
+          .catch((err) => console.error('PWA fail.', err));
       });
     }
   </script>
