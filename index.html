@@ -411,7 +411,7 @@
       </div>
 
       <div class="panel-body">
-        
+
         <div id="tab-document" class="tab active">
           <div class="grid-2">
             <div class="field">
@@ -598,7 +598,7 @@
           <div class="grid-2">
             <div class="field">
               <label>Régime de TVA</label>
-              <select id="vatRegime" onchange="render()">
+              <select id="vatRegime">
                 <option value="normal">TVA applicable</option>
                 <option value="franchise">Franchise en base de TVA</option>
                 <option value="autoliquidation">Autoliquidation</option>
@@ -607,7 +607,7 @@
 
             <div class="field">
               <label>TVA sur les débits</label>
-              <select id="vatDebit" onchange="render()">
+              <select id="vatDebit">
                 <option value="non">Non</option>
                 <option value="oui">Oui, option pour le paiement de la taxe d’après les débits</option>
               </select>
@@ -713,6 +713,7 @@
         .replaceAll('\n', '<br>');
     }
 
+    // Correction de l'écoute stricte par id sur l'élément document
     function get(id) {
       return document.getElementById(id)?.value || '';
     }
@@ -772,6 +773,18 @@
       renderLines();
       render();
     }
+
+    // Écouteurs de changement de type pour l'auto-génération du numéro
+    document.addEventListener('change', e => {
+      if (e.target && e.target.id === 'docType') {
+        const type = e.target.value;
+        if (type === 'Devis') set('docNumber', generateNumber('DEV'));
+        else if (type === 'Facture') set('docNumber', generateNumber('FAC'));
+        else if (type === "Facture d'acompte") set('docNumber', generateNumber('AC'));
+        else set('docNumber', generateNumber('AV'));
+        render();
+      }
+    });
 
     function addService() {
       addLine({ label: 'Prestation de service', unit: 'forfait', vat: 20 });
@@ -1164,13 +1177,14 @@
       });
     });
 
-    // Correction de l'écouteur dynamique global
+    // Écoute dynamique sur document avec ciblage strict des IDs
     fields.forEach(id => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.addEventListener('input', render);
-        el.addEventListener('change', render);
-      }
+      document.addEventListener('input', e => {
+        if (e.target && e.target.id === id) render();
+      });
+      document.addEventListener('change', e => {
+        if (e.target && e.target.id === id) render();
+      });
     });
 
     const saved = localStorage.getItem('devisFacturesFrance');
@@ -1182,15 +1196,6 @@
       }
     } else {
       init();
-    }
-
-    // Liaison d'écouteur Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('sw.js')
-          .then((reg) => console.log('PWA active.'))
-          .catch((err) => console.error('PWA fail.', err));
-      });
     }
   </script>
 </body>
