@@ -1,21 +1,25 @@
-const CACHE_NAME = 'devis-factures-v1';
-// Liste des fichiers à mettre en cache (ton fichier HTML unique)
+const CACHE_NAME = 'devis-factures-v2';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
   './manifest.json'
 ];
 
-// Installation du Service Worker et mise en cache des ressources
+// Installation : Mise en cache des fichiers essentiels
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
+      // On utilise une approche résiliente : si un fichier échoue, ça ne bloque pas tout
+      return Promise.allSettled(
+        ASSETS_TO_CACHE.map(url => {
+          return cache.add(url).catch(err => console.warn(`Échec de mise en cache pour : ${url}`, err));
+        })
+      );
     }).then(() => self.skipWaiting())
   );
 });
 
-// Activation et nettoyage des anciens caches
+// Activation : Nettoyage des anciens caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -30,13 +34,17 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Stratégie Réseau d'abord, repli sur le Cache si hors ligne
+// Interception des requêtes (Stratégie Network-First avec repli sur Cache)
 self.addEventListener('fetch', (event) => {
+  // On ne gère que les requêtes GET standard (évite les bugs avec les extensions du navigateur)
+  if (event.request.method !== 'GET' || !event.request.url.startsWith(self.location.origin)) {
+    return;
+  }
+
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // Si la requête réussit, on met à jour le cache dynamiquement
-        if (response.status === 200 && event.request.method === 'GET') {
+        if (response.status === 200) {
           const responseClone = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, responseClone);
@@ -45,12 +53,12 @@ self.addEventListener('fetch', (event) => {
         return response;
       })
       .catch(() => {
-        // Si le réseau échoue (hors ligne), on charge depuis le cache
+        // En cas de panne réseau / Hors-ligne -> Mode Cache
         return caches.match(event.request).then((cachedResponse) => {
           if (cachedResponse) {
             return cachedResponse;
           }
-          // Optionnel : redirection vers l'index si la ressource exacte n'est pas cachée
+          // Si c'est une navigation de page, on renvoie l'index
           if (event.request.mode === 'navigate') {
             return caches.match('./index.html');
           }
