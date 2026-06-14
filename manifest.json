@@ -1,0 +1,22 @@
+{
+  "short_name": "DevisFact",
+  "name": "Devis & Factures France",
+  "description": "Génération locale et impression de devis et factures conformes aux mentions françaises.",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "./index.html",
+  "background_color": "#f3f5f8",
+  "theme_color": "#2563eb",
+  "display": "standalone",
+  "orientation": "portrait-primary"
+}
